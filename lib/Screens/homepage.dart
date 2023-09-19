@@ -11,6 +11,8 @@ import '../Data/Data_modal/data_modal.dart';
 import '../Widgets/Drawer.dart';
 import 'package:http/http.dart' as http;
 
+import 'wallpaperScreen.dart';
+
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
 
@@ -19,13 +21,15 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  TextEditingController searchController = TextEditingController();
+
   final String API_KEY =
       'BqPWVyQC1cmDBDb0HtajPIFOvsQW30rGQC1cwhFgshqPA8XQinkGSINJ';
   late Future<DataModal?> data;
 
   @override
   void initState() {
-    data = getApiData();
+    data = getApiData('Any');
     super.initState();
   }
 
@@ -104,6 +108,7 @@ class _HomepageState extends State<Homepage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: TextFormField(
+                          controller: searchController,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -121,9 +126,17 @@ class _HomepageState extends State<Homepage> {
                       )),
                   // SizedBox(width: size.width * 0.2),
                   Expanded(
-                      child: Icon(
-                    Icons.filter_list,
-                    color: Colors.grey,
+                      child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        data = getApiData(searchController.text.toString());
+                        searchController.clear();
+                      });
+                    },
+                    child: Icon(
+                      Icons.filter_list,
+                      color: Colors.grey,
+                    ),
                   ))
                 ],
               ),
@@ -140,18 +153,43 @@ class _HomepageState extends State<Homepage> {
               SizedBox(
                 height: size.height * 0.2,
                 width: size.width,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(color: Colors.grey),
-                        child: Image.asset('assets/Images/img${index + 1}.jpg'),
-                      ),
-                    );
+                child: FutureBuilder(
+                  future: getApiData('popular'),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.data != null &&
+                        snapshot.data!.photos != null &&
+                        snapshot.data!.photos!.isNotEmpty) {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data?.photos!.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: SizedBox(
+                              width: size.width * 1 / 2,
+                              child: Image.network(
+                                '${snapshot.data?.photos![index].src!.landscape}',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: Text(
+                          'No data available',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: size.height * 0.05),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -176,11 +214,19 @@ class _HomepageState extends State<Homepage> {
                             border: Border.all(color: Colors.black54),
                             borderRadius: BorderRadius.circular(12)),
                         child: Center(
-                          child: Text(
-                            '${DataConstants.searchLst[index]}',
-                            style: TextStyle(
-                                color:
-                                    const Color.fromARGB(255, 172, 170, 170)),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                data = getApiData(
+                                    '${DataConstants.searchLst[index]}');
+                              });
+                            },
+                            child: Text(
+                              '${DataConstants.searchLst[index]}',
+                              style: TextStyle(
+                                  color:
+                                      const Color.fromARGB(255, 172, 170, 170)),
+                            ),
                           ),
                         ),
                       ),
@@ -190,49 +236,55 @@ class _HomepageState extends State<Homepage> {
               ),
               SizedBox(height: size.height * 0.008),
               //--------------------Wallpapers---------------------//
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                height: size.height * 2,
-                child: FutureBuilder(
-                  future: data,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.data != null &&
-                        snapshot.data!.photos != null &&
-                        snapshot.data!.photos!.isNotEmpty) {
-                      return MasonryGridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                        itemCount: snapshot.data?.photos!.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                              decoration: BoxDecoration(color: Colors.grey),
-                              child: Text('${snapshot.data?.photos!.length}'),
+              FutureBuilder(
+                future: data,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.data != null &&
+                      snapshot.data!.photos != null &&
+                      snapshot.data!.photos!.isNotEmpty) {
+                    return MasonryGridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemCount: snapshot.data?.photos!.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WallpaperScreenPage(
+                                      imgAdd:
+                                          '${snapshot.data?.photos![index].src!.large2x}'),
+                                )),
+                            child: Hero(
+                              tag: 'pic',
+                              child: Image.network(
+                                  '${snapshot.data?.photos![index].src!.original}'),
                             ),
-                          );
-                        },
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                          'No data available',
-                          style: TextStyle(color: Colors.white,fontSize: size.height*0.05),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              )
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: Text(
+                        'No data available',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: size.height * 0.05),
+                      ),
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -240,18 +292,16 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Future<DataModal?> getApiData() async {
-    Uri mUrl =
-        Uri.parse('https://api.pexels.com/v1/search?query=nature&per_page=10');
-    await http.get(mUrl, headers: {'Authorization': API_KEY}).then((value) {
-      if (value.statusCode == 200) {
-        var json = jsonDecode(value.body);
-        DataModal data = DataModal.fromJson(json);
-        return data;
-      } else {
-        return DataModal();
-      }
-    });
-    return null;
+  Future<DataModal?> getApiData(String query) async {
+    Uri mUrl = Uri.parse('https://api.pexels.com/v1/search?query=$query');
+    var res = await http.get(mUrl, headers: {'Authorization': API_KEY});
+
+    if (res.statusCode == 200) {
+      var json = jsonDecode(res.body);
+      DataModal data = DataModal.fromJson(json);
+      return data;
+    } else {
+      return DataModal();
+    }
   }
 }

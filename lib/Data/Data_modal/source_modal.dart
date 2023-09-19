@@ -1,22 +1,22 @@
 class SourceModal {
-  String landscape;
-  String large;
-  String large2x;
-  String medium;
-  String original;
-  String portrait;
-  String small;
-  String tiny;
+  String? landscape;
+  String? large;
+  String? large2x;
+  String? medium;
+  String? original;
+  String? portrait;
+  String? small;
+  String? tiny;
 
   SourceModal({
-    required this.landscape,
-    required this.large,
-    required this.large2x,
-    required this.medium,
-    required this.original,
-    required this.portrait,
-    required this.small,
-    required this.tiny,
+     this.landscape,
+     this.large,
+     this.large2x,
+     this.medium,
+     this.original,
+     this.portrait,
+     this.small,
+     this.tiny,
   });
 
   factory SourceModal.fromJson(Map<String, dynamic> json) {

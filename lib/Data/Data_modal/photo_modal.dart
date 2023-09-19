@@ -3,30 +3,30 @@
 import 'package:nebulae/Data/Data_modal/source_modal.dart';
 
 class PhotoModal {
-  int id;
-  int photographer_id;
-  num width;
-  num height;
-  String url;
-  String photographer;
-  String photographer_url;
-  String avg_color;
-  String alt;
-  bool liked;
-  SourceModal src;
+  int? id;
+  int? photographer_id;
+  num? width;
+  num? height;
+  String? url;
+  String? photographer;
+  String? photographer_url;
+  String? avg_color;
+  String? alt;
+  bool? liked;
+  SourceModal? src;
 
   PhotoModal({
-    required this.alt,
-    required this.avg_color,
-    required this.height,
-    required this.id,
-    required this.liked,
-    required this.photographer,
-    required this.photographer_id,
-    required this.photographer_url,
-    required this.url,
-    required this.width,
-    required this.src,
+     this.alt,
+     this.avg_color,
+     this.height,
+     this.id,
+     this.liked,
+     this.photographer,
+     this.photographer_id,
+     this.photographer_url,
+     this.url,
+     this.width,
+     this.src,
   });
 
   factory PhotoModal.fromJson(Map<String, dynamic> json) {

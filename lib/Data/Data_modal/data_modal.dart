@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:nebulae/Data/Data_modal/user_modal.dart';
+import 'package:nebulae/Data/Data_modal/photo_modal.dart';
 
 class DataModal {
   int? page;
