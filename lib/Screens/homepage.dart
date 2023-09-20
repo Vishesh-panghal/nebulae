@@ -263,12 +263,12 @@ class _HomepageState extends State<Homepage> {
                                 MaterialPageRoute(
                                   builder: (context) => WallpaperScreenPage(
                                       imgAdd:
-                                          '${snapshot.data?.photos![index].src!.large2x}'),
+                                          '${snapshot.data?.photos![index].src!.portrait}'),
                                 )),
                             child: Hero(
-                              tag: 'pic',
+                              tag: 'liveData',
                               child: Image.network(
-                                  '${snapshot.data?.photos![index].src!.original}'),
+                                  '${snapshot.data?.photos![index].src!.portrait}'),
                             ),
                           ),
                         );

@@ -17,21 +17,15 @@ class _WallpaperScreenPageState extends State<WallpaperScreenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          FutureBuilder(
-            builder: (context, snapshot) {
-              return Hero(
-                tag: 'pic-1',
-                child: Container(
-                  constraints: BoxConstraints.expand(),
-                  child: Image.network(widget.imgAdd),
-                ),
-              );
-            },
+      body:
+          Hero(
+            tag: 'liveData',
+            child: Container(
+              constraints: BoxConstraints.expand(),
+              child: Image.network(widget.imgAdd),
+            ),
           )
-        ],
-      ),
+
     );
   }
 }
