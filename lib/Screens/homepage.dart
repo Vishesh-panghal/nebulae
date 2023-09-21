@@ -154,7 +154,7 @@ class _HomepageState extends State<Homepage> {
                 height: size.height * 0.2,
                 width: size.width,
                 child: FutureBuilder(
-                  future: getApiData('popular'),
+                  future: getApiData('trending'),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -259,14 +259,16 @@ class _HomepageState extends State<Homepage> {
                           padding: const EdgeInsets.all(2.0),
                           child: InkWell(
                             onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => WallpaperScreenPage(
-                                      imgAdd:
-                                          '${snapshot.data?.photos![index].src!.portrait}'),
-                                )),
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WallpaperScreenPage(
+                                    imgAdd:
+                                        '${snapshot.data?.photos![index].src!.portrait}'),
+                              ),
+                            ),
                             child: Hero(
-                              tag: 'liveData',
+                              tag:
+                                  '${snapshot.data?.photos![index].src!.portrait}',
                               child: Image.network(
                                   '${snapshot.data?.photos![index].src!.portrait}'),
                             ),

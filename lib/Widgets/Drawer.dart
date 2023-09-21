@@ -62,13 +62,13 @@ class MyDrawer extends StatelessWidget {
               ),
               SizedBox(height: size.height * 0.02),
               DrawerListWidget(
-                icn: Icons.settings,
-                title: 'Settings',
+                icn: Icons.assistant,
+                title: 'Genrate an Image',
               ),
               SizedBox(height: size.height * 0.02),
               DrawerListWidget(
-                icn: Icons.assistant,
-                title: 'Genrate an Image',
+                icn: Icons.settings,
+                title: 'Settings',
               ),
             ],
           ),

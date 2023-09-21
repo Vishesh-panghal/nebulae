@@ -19,12 +19,12 @@ class _WallpaperScreenPageState extends State<WallpaperScreenPage> {
     return Scaffold(
       body:
           Hero(
-            tag: 'liveData',
+            tag: '$widget.imgAdd',
             child: Container(
               constraints: BoxConstraints.expand(),
               child: Image.network(widget.imgAdd),
             ),
-          )
+          ) 
 
     );
   }
