@@ -3,11 +3,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nebulae/Api/api_helper.dart';
 import 'package:nebulae/Constants/Color_constants.dart';
-import 'package:nebulae/Constants/Data_constants.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../Data/Data_modal/data_modal.dart';
+import '../Api/urls.dart';
+import '../Bloc/trending/trending_api_integration_bloc.dart';
+import '../Constants/Data_constants.dart';
 import '../Widgets/Drawer.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,11 +28,9 @@ class _HomepageState extends State<Homepage> {
 
   final String API_KEY =
       'BqPWVyQC1cmDBDb0HtajPIFOvsQW30rGQC1cwhFgshqPA8XQinkGSINJ';
-  late Future<DataModal?> data;
 
   @override
   void initState() {
-    data = getApiData('Any');
     super.initState();
   }
 
@@ -129,7 +130,6 @@ class _HomepageState extends State<Homepage> {
                       child: InkWell(
                     onTap: () {
                       setState(() {
-                        data = getApiData(searchController.text.toString());
                         searchController.clear();
                       });
                     },
@@ -137,7 +137,7 @@ class _HomepageState extends State<Homepage> {
                       Icons.filter_list,
                       color: Colors.grey,
                     ),
-                  ))
+                  ),)
                 ],
               ),
               SizedBox(height: size.height * .01),
@@ -153,45 +153,75 @@ class _HomepageState extends State<Homepage> {
               SizedBox(
                 height: size.height * 0.2,
                 width: size.width,
-                child: FutureBuilder(
-                  future: getApiData('trending'),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.data != null &&
-                        snapshot.data!.photos != null &&
-                        snapshot.data!.photos!.isNotEmpty) {
+                child:
+                    BlocBuilder<TrendingWalpaperBloc, TrendingWallpaperState>(
+                  builder: (context, state) {
+                    if (state is TrendingWallpaperLoadingState) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is TrendingWallpaperLoadedState) {
                       return ListView.builder(
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
-                        itemCount: snapshot.data?.photos!.length,
+                        itemCount: state.dataPhotoModal.photos!.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: SizedBox(
                               width: size.width * 1 / 2,
                               child: Image.network(
-                                '${snapshot.data?.photos![index].src!.landscape}',
+                                '${state.dataPhotoModal.photos![index].src!.landscape}',
                                 fit: BoxFit.cover,
                               ),
                             ),
                           );
                         },
                       );
-                    } else {
-                      return Center(
-                        child: Text(
-                          'No data available',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size.height * 0.05),
-                        ),
-                      );
                     }
+                    return Container();
                   },
                 ),
+
+                // child: FutureBuilder(
+                //   future: Urls.searchWallpaper,
+                //   builder: (context, state) {
+                //     if (state.connectionState == ConnectionState.waiting) {
+                //       return Center(child: CircularProgressIndicator());
+                //     } else if (state.hasError) {
+                //       return Text('Error: ${state.error}');
+                //     } else if (state.dataPhotoModal. != null &&
+                //         state.dataPhotoModal.!.photos != null &&
+                //         state.dataPhotoModal.!.photos!.isNotEmpty) {
+                //       return ListView.builder(
+                //         scrollDirection: Axis.horizontal,
+                //         shrinkWrap: true,
+                //         itemCount: state.dataPhotoModal.?.photos!.length,
+                //         itemBuilder: (context, index) {
+                //           return Padding(
+                //             padding: const EdgeInsets.all(2.0),
+                //             child: SizedBox(
+                //               width: size.width * 1 / 2,
+                //               child: Image.network(
+                //                 '${state.dataPhotoModal.?.photos![index].src!.landscape}',
+                //                 fit: BoxFit.cover,
+                //               ),
+                //             ),
+                //           );
+                //         },
+                //       );
+                //     } else {
+                //       return Center(
+                //         child: Text(
+                //           'No dataPhotoModal. available',
+                //           style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: size.height * 0.05),
+                //         ),
+                //       );
+                //     }
+                //   },
+                // ),
               ),
               SizedBox(height: size.height * .01),
               Divider(thickness: 2, color: Colors.grey.shade900),
@@ -216,10 +246,7 @@ class _HomepageState extends State<Homepage> {
                         child: Center(
                           child: InkWell(
                             onTap: () {
-                              setState(() {
-                                data = getApiData(
-                                    '${DataConstants.searchLst[index]}');
-                              });
+                              setState(() {});
                             },
                             child: Text(
                               '${DataConstants.searchLst[index]}',
@@ -236,16 +263,13 @@ class _HomepageState extends State<Homepage> {
               ),
               SizedBox(height: size.height * 0.008),
               //--------------------Wallpapers---------------------//
-              FutureBuilder(
-                future: data,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.data != null &&
-                      snapshot.data!.photos != null &&
-                      snapshot.data!.photos!.isNotEmpty) {
+              BlocBuilder<TrendingWalpaperBloc, TrendingWallpaperState>(
+                builder: (context, state) {
+                  if (state is TrendingWallpaperLoadingState) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is TrendingWallpaperLoadedState) {
                     return MasonryGridView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -253,7 +277,7 @@ class _HomepageState extends State<Homepage> {
                           SliverSimpleGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                       ),
-                      itemCount: snapshot.data?.photos!.length,
+                      itemCount: state.dataPhotoModal.photos!.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(2.0),
@@ -263,28 +287,21 @@ class _HomepageState extends State<Homepage> {
                               MaterialPageRoute(
                                 builder: (context) => WallpaperScreenPage(
                                     imgAdd:
-                                        '${snapshot.data?.photos![index].src!.portrait}'),
+                                        '${state.dataPhotoModal.photos![index].src!.portrait}'),
                               ),
                             ),
                             child: Hero(
                               tag:
-                                  '${snapshot.data?.photos![index].src!.portrait}',
+                                  '${state.dataPhotoModal.photos![index].src!.portrait}',
                               child: Image.network(
-                                  '${snapshot.data?.photos![index].src!.portrait}'),
+                                  '${state.dataPhotoModal.photos![index].src!.portrait}'),
                             ),
                           ),
                         );
                       },
                     );
-                  } else {
-                    return Center(
-                      child: Text(
-                        'No data available',
-                        style: TextStyle(
-                            color: Colors.white, fontSize: size.height * 0.05),
-                      ),
-                    );
                   }
+                  return Container();
                 },
               ),
             ],
@@ -294,16 +311,79 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Future<DataModal?> getApiData(String query) async {
-    Uri mUrl = Uri.parse('https://api.pexels.com/v1/search?query=$query');
-    var res = await http.get(mUrl, headers: {'Authorization': API_KEY});
+  // Future<dataPhotoModal.Modal?> getApidataPhotoModal.(String query) async {
+  //   Uri mUrl = Uri.parse('https://api.pexels.com/v1/search?query=$query');
+  //   var res = await http.get(mUrl, headers: {'Authorization': API_KEY});
 
-    if (res.statusCode == 200) {
-      var json = jsonDecode(res.body);
-      DataModal data = DataModal.fromJson(json);
-      return data;
-    } else {
-      return DataModal();
-    }
-  }
+  //   if (res.statusCode == 200) {
+  //     var json = jsonDecode(res.body);
+  //     dataPhotoModal.Modal dataPhotoModal. = dataPhotoModal.Modal.fromJson(json);
+  //     return dataPhotoModal.;
+  //   } else {
+  //     return dataPhotoModal.Modal();
+  //   }
+  // }
 }
+
+
+
+
+
+
+
+
+
+
+
+// Future Builder:----🔻
+// FutureBuilder(
+//                 future: dataPhotoModal.,
+//                 builder: (context, state) {
+//                   if (state.connectionState == ConnectionState.waiting) {
+//                     return Center(child: CircularProgressIndicator());
+//                   } else if (state.hasError) {
+//                     return Text('Error: ${state.error}');
+//                   } else if (state.dataPhotoModal. != null &&
+//                       state.dataPhotoModal.!.photos != null &&
+//                       state.dataPhotoModal.!.photos!.isNotEmpty) {
+//                     return MasonryGridView.builder(
+//                       shrinkWrap: true,
+//                       physics: NeverScrollableScrollPhysics(),
+//                       gridDelegate:
+//                           SliverSimpleGridDelegateWithFixedCrossAxisCount(
+//                         crossAxisCount: 2,
+//                       ),
+//                       itemCount: state.dataPhotoModal.?.photos!.length,
+//                       itemBuilder: (context, index) {
+//                         return Padding(
+//                           padding: const EdgeInsets.all(2.0),
+//                           child: InkWell(
+//                             onTap: () => Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                 builder: (context) => WallpaperScreenPage(
+//                                     imgAdd:
+//                                         '${state.dataPhotoModal.?.photos![index].src!.portrait}'),
+//                               ),
+//                             ),
+//                             child: Hero(
+//                               tag:
+//                                   '${state.dataPhotoModal.?.photos![index].src!.portrait}',
+//                               child: Image.network(
+//                                   '${state.dataPhotoModal.?.photos![index].src!.portrait}'),
+//                             ),
+//                           ),
+//                         );
+//                       },
+//                     );
+//                   } else {
+//                     return Center(
+//                       child: Text(
+//                         'No dataPhotoModal. available',
+//                         style: TextStyle(
+//                             color: Colors.white, fontSize: size.height * 0.05),
+//                       ),
+//                     );
+//                   }
+//                 },
+//               ),
