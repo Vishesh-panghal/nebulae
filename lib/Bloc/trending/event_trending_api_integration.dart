@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 part of 'trending_api_integration_bloc.dart';
 
 @immutable

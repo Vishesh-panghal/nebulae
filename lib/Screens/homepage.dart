@@ -1,18 +1,13 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unnecessary_string_interpolations, avoid_print
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nebulae/Api/api_helper.dart';
 import 'package:nebulae/Constants/Color_constants.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../Api/urls.dart';
 import '../Bloc/trending/trending_api_integration_bloc.dart';
 import '../Constants/Data_constants.dart';
 import '../Widgets/Drawer.dart';
-import 'package:http/http.dart' as http;
 
 import 'wallpaperScreen.dart';
 
@@ -127,17 +122,18 @@ class _HomepageState extends State<Homepage> {
                       )),
                   // SizedBox(width: size.width * 0.2),
                   Expanded(
-                      child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        searchController.clear();
-                      });
-                    },
-                    child: Icon(
-                      Icons.filter_list,
-                      color: Colors.grey,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          searchController.clear();
+                        });
+                      },
+                      child: Icon(
+                        Icons.filter_list,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),)
+                  )
                 ],
               ),
               SizedBox(height: size.height * .01),
@@ -182,46 +178,6 @@ class _HomepageState extends State<Homepage> {
                     return Container();
                   },
                 ),
-
-                // child: FutureBuilder(
-                //   future: Urls.searchWallpaper,
-                //   builder: (context, state) {
-                //     if (state.connectionState == ConnectionState.waiting) {
-                //       return Center(child: CircularProgressIndicator());
-                //     } else if (state.hasError) {
-                //       return Text('Error: ${state.error}');
-                //     } else if (state.dataPhotoModal. != null &&
-                //         state.dataPhotoModal.!.photos != null &&
-                //         state.dataPhotoModal.!.photos!.isNotEmpty) {
-                //       return ListView.builder(
-                //         scrollDirection: Axis.horizontal,
-                //         shrinkWrap: true,
-                //         itemCount: state.dataPhotoModal.?.photos!.length,
-                //         itemBuilder: (context, index) {
-                //           return Padding(
-                //             padding: const EdgeInsets.all(2.0),
-                //             child: SizedBox(
-                //               width: size.width * 1 / 2,
-                //               child: Image.network(
-                //                 '${state.dataPhotoModal.?.photos![index].src!.landscape}',
-                //                 fit: BoxFit.cover,
-                //               ),
-                //             ),
-                //           );
-                //         },
-                //       );
-                //     } else {
-                //       return Center(
-                //         child: Text(
-                //           'No dataPhotoModal. available',
-                //           style: TextStyle(
-                //               color: Colors.white,
-                //               fontSize: size.height * 0.05),
-                //         ),
-                //       );
-                //     }
-                //   },
-                // ),
               ),
               SizedBox(height: size.height * .01),
               Divider(thickness: 2, color: Colors.grey.shade900),

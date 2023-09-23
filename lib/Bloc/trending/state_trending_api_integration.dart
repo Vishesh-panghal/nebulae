@@ -19,3 +19,7 @@ final class TrendingWallpaperErrorState extends TrendingWallpaperState {
 
   TrendingWallpaperErrorState({required this.errorMsg});
 }
+class TrendingWallpaperInternetErrorState extends TrendingWallpaperState {
+  String errorMsg;
+  TrendingWallpaperInternetErrorState({required this.errorMsg});
+}
