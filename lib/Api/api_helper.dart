@@ -12,7 +12,7 @@ class ApiHelper {
           headers: mHeader ??
               {
                 "Authorization":
-                    "nXWH9BLpCYtVtyjDTbJB3Hf20uneSxZcYisVLVmNDV4PamGm6EeVDgZm",
+                    "BqPWVyQC1cmDBDb0HtajPIFOvsQW30rGQC1cwhFgshqPA8XQinkGSINJ",
               });
       return returnDataResponse(res);
     } on SocketException {
@@ -32,7 +32,7 @@ class ApiHelper {
           headers: mHeader ??
               {
                 "Authorization":
-                    "nXWH9BLpCYtVtyjDTbJB3Hf20uneSxZcYisVLVmNDV4PamGm6EeVDgZmm"
+                    "BqPWVyQC1cmDBDb0HtajPIFOvsQW30rGQC1cwhFgshqPA8XQinkGSINJ"
               });
 
       return returnDataResponse(res);
@@ -46,6 +46,7 @@ dynamic returnDataResponse(http.Response res) {
   switch (res.statusCode) {
     case 200:
       var mData = res.body;
+      print(mData);
       return jsonDecode(mData);
     case 400:
       throw BadRequestException(body: res.body.toString());

@@ -14,7 +14,7 @@ class TrendingWalpaperBloc
   ApiHelper apiHelper;
   TrendingWalpaperBloc({required this.apiHelper})
       : super(TrendingWallpaperInitialState()) {
-    on<TrendingWallpaperEvent>((event, emit) async {
+    on<GetTrendingWallpaper>((event, emit) async {
       emit(TrendingWallpaperLoadingState());
       try {
         var res = await apiHelper.getApiData(url: Urls.trendingWallpaper);
@@ -24,7 +24,8 @@ class TrendingWalpaperBloc
         if (e is FetchDataException) {
           emit(TrendingWallpaperInternetErrorState(errorMsg: e.ToString()));
         } else {
-          emit(TrendingWallpaperErrorState(errorMsg: e.toString()));
+          emit(TrendingWallpaperErrorState(
+              errorMsg: (e is MyException) ? e.ToString() : 'Unkknown Error'));
         }
       }
     });

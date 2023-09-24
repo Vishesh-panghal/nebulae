@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nebulae/Constants/Color_constants.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import '../Bloc/search/bloc/search_api_integration_bloc.dart';
 import '../Bloc/trending/trending_api_integration_bloc.dart';
 import '../Constants/Data_constants.dart';
 import '../Widgets/Drawer.dart';
@@ -21,11 +22,10 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   TextEditingController searchController = TextEditingController();
 
-  final String API_KEY =
-      'BqPWVyQC1cmDBDb0HtajPIFOvsQW30rGQC1cwhFgshqPA8XQinkGSINJ';
-
   @override
   void initState() {
+    context.read<TrendingWalpaperBloc>().add(GetTrendingWallpaper());
+    context.read<SearchApiBloc>().add(GetSearchWallpaper(query: 'nature'));
     super.initState();
   }
 
@@ -89,6 +89,7 @@ class _HomepageState extends State<Homepage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: size.height * .02),
+              //----------------Search Bar-----------------------//
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,9 +125,13 @@ class _HomepageState extends State<Homepage> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        setState(() {
-                          searchController.clear();
-                        });
+                        var query = searchController.text.toString();
+                        context.read<SearchApiBloc>().add(
+                              GetSearchWallpaper(
+                                query: searchController.text.toString(),
+                              ),
+                            );
+                        searchController.clear();
                       },
                       child: Icon(
                         Icons.filter_list,
@@ -152,9 +157,24 @@ class _HomepageState extends State<Homepage> {
                 child:
                     BlocBuilder<TrendingWalpaperBloc, TrendingWallpaperState>(
                   builder: (context, state) {
+                    print('Hi1');
                     if (state is TrendingWallpaperLoadingState) {
                       return Center(
                         child: CircularProgressIndicator(),
+                      );
+                    } else if (state is TrendingWallpaperInternetErrorState) {
+                      return Center(
+                        child: Text(
+                          state.errorMsg,
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        ),
+                      );
+                    } else if (state is TrendingWallpaperErrorState) {
+                      return Center(
+                        child: Text(
+                          state.errorMsg,
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        ),
                       );
                     } else if (state is TrendingWallpaperLoadedState) {
                       return ListView.builder(
@@ -162,20 +182,28 @@ class _HomepageState extends State<Homepage> {
                         shrinkWrap: true,
                         itemCount: state.dataPhotoModal.photos!.length,
                         itemBuilder: (context, index) {
+                          var data = state.dataPhotoModal.photos![index];
                           return Padding(
-                            padding: const EdgeInsets.all(2.0),
+                            padding: const EdgeInsets.all(3.0),
                             child: SizedBox(
-                              width: size.width * 1 / 2,
+                              // width: size.width * 1 / 3,
                               child: Image.network(
-                                '${state.dataPhotoModal.photos![index].src!.landscape}',
-                                fit: BoxFit.cover,
+                                '${data.src!.portrait}',
+                                fit: BoxFit.fill,
+                                width: size.width * 0.4,
+                                // height: size.height*0.,
                               ),
                             ),
                           );
                         },
                       );
                     }
-                    return Container();
+                    return Center(
+                      child: Text(
+                        'No Data',
+                        style: TextStyle(fontSize: 22, color: Colors.white),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -202,7 +230,11 @@ class _HomepageState extends State<Homepage> {
                         child: Center(
                           child: InkWell(
                             onTap: () {
-                              setState(() {});
+                              context.read<SearchApiBloc>().add(
+                              GetSearchWallpaper(
+                                query: DataConstants.searchLst[index],
+                              ),
+                            );
                             },
                             child: Text(
                               '${DataConstants.searchLst[index]}',
@@ -219,13 +251,13 @@ class _HomepageState extends State<Homepage> {
               ),
               SizedBox(height: size.height * 0.008),
               //--------------------Wallpapers---------------------//
-              BlocBuilder<TrendingWalpaperBloc, TrendingWallpaperState>(
+              BlocBuilder<SearchApiBloc, SearchApiState>(
                 builder: (context, state) {
-                  if (state is TrendingWallpaperLoadingState) {
+                  if (state is SearchWallpaperLoadingState) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (state is TrendingWallpaperLoadedState) {
+                  } else if (state is SearchWallpaperLoadedState) {
                     return MasonryGridView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -235,6 +267,7 @@ class _HomepageState extends State<Homepage> {
                       ),
                       itemCount: state.dataPhotoModal.photos!.length,
                       itemBuilder: (context, index) {
+                        var data = state.dataPhotoModal.photos![index];
                         return Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: InkWell(
@@ -242,22 +275,24 @@ class _HomepageState extends State<Homepage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => WallpaperScreenPage(
-                                    imgAdd:
-                                        '${state.dataPhotoModal.photos![index].src!.portrait}'),
+                                    imgAdd: '${data.src!.portrait}'),
                               ),
                             ),
                             child: Hero(
-                              tag:
-                                  '${state.dataPhotoModal.photos![index].src!.portrait}',
-                              child: Image.network(
-                                  '${state.dataPhotoModal.photos![index].src!.portrait}'),
+                              tag: '${data.src!.portrait}',
+                              child: Image.network('${data.src!.portrait}'),
                             ),
                           ),
                         );
                       },
                     );
                   }
-                  return Container();
+                  return Center(
+                    child: Text(
+                      'No Data',
+                      style: TextStyle(fontSize: 22, color: Colors.white),
+                    ),
+                  );
                 },
               ),
             ],

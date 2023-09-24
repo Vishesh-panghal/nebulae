@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class MyException implements Exception {
   String title;
   String body;
@@ -7,7 +9,6 @@ class MyException implements Exception {
     required this.body,
   });
 
-  @override
   String ToString() {
     return "$title:$body";
   }
