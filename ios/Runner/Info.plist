@@ -47,5 +47,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To download wallpaper</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To read and write gallery</string>
 </dict>
 </plist>

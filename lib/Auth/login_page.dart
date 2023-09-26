@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../Constants/Color_constants.dart';
 import '../Constants/Images_constants.dart';
 import 'signup_page.dart';
@@ -78,8 +77,8 @@ class _LoginPageState extends State<LoginPage> {
                       RichText(
                           text: TextSpan(
                               text: 'NEB',
-                              style: TextStyle(
-                                fontFamily: GoogleFonts.poppins().fontFamily,
+                              style: const TextStyle(
+                                // fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontSize: 52,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -89,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                             TextSpan(
                                 text: 'U',
                                 style: TextStyle(
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  // fontFamily: GoogleFonts.poppins().fontFamily,
                                   fontSize: 52,
                                   color: Colors.cyanAccent,
                                   fontWeight: FontWeight.bold,
@@ -98,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                             TextSpan(
                                 text: 'LAE',
                                 style: TextStyle(
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  // fontFamily: GoogleFonts.poppins().fontFamily,
                                   fontSize: 52,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -111,12 +110,13 @@ class _LoginPageState extends State<LoginPage> {
                           const TextSpan(
                               text: 'Vivid hues paint the canvas of '),
                           TextSpan(
-                              text: 'Nebulae',
-                              style: TextStyle(
-                                  color: Colors.cyanAccent,
-                                  fontSize: 18,
-                                  fontFamily:
-                                      GoogleFonts.poppins().fontFamily)),
+                            text: 'Nebulae',
+                            style: TextStyle(
+                              color: Colors.cyanAccent,
+                              fontSize: 18,
+                              // fontFamily: GoogleFonts.poppins().fontFamily,
+                            ),
+                          ),
                         ])
                       ])),
                       SizedBox(height: size.height * 0.03),

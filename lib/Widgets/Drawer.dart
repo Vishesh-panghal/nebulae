@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -26,7 +25,7 @@ class MyDrawer extends StatelessWidget {
               Text(
                 'Vishesh',
                 style: TextStyle(
-                  fontFamily: GoogleFonts.poppins().fontFamily,
+                  // fontFamily: GoogleFonts.poppins().fontFamily,
                   color: Colors.white,
                   fontSize: size.width * 0.05,
                   fontWeight: FontWeight.bold,
@@ -36,7 +35,7 @@ class MyDrawer extends StatelessWidget {
               Text(
                 'VisheshPanghal12@gmail.com',
                 style: TextStyle(
-                  fontFamily: GoogleFonts.poppins().fontFamily,
+                  // fontFamily: GoogleFonts.poppins().fontFamily,
                   color: Colors.grey.shade400,
                   fontSize: size.width * 0.03,
                 ),
@@ -102,7 +101,7 @@ class DrawerListWidget extends StatelessWidget {
         Text(
           title.toUpperCase(),
           style: TextStyle(
-            fontFamily: GoogleFonts.poppins().fontFamily,
+            // fontFamily: GoogleFonts.poppins().fontFamily,
             color: Colors.white,
             fontSize: size.width * 0.05,
           ),

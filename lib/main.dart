@@ -1,7 +1,6 @@
 // ignore_for_file: unused_import
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nebulae/Api/api_helper.dart';
 import 'package:nebulae/Bloc/search/bloc/search_api_integration_bloc.dart';
 import 'package:nebulae/Widgets/Themes.dart';

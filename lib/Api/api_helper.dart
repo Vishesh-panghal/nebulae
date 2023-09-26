@@ -46,7 +46,6 @@ dynamic returnDataResponse(http.Response res) {
   switch (res.statusCode) {
     case 200:
       var mData = res.body;
-      print(mData);
       return jsonDecode(mData);
     case 400:
       throw BadRequestException(body: res.body.toString());

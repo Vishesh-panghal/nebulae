@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nebulae/Constants/Color_constants.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../Bloc/search/bloc/search_api_integration_bloc.dart';
@@ -38,7 +37,7 @@ class _HomepageState extends State<Homepage> {
           text: TextSpan(
             text: 'NEB',
             style: TextStyle(
-              fontFamily: GoogleFonts.poppins().fontFamily,
+              // fontFamily: GoogleFonts.poppins().fontFamily,
               fontSize: 22,
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -48,7 +47,7 @@ class _HomepageState extends State<Homepage> {
               TextSpan(
                   text: 'U',
                   style: TextStyle(
-                    fontFamily: GoogleFonts.poppins().fontFamily,
+                    // fontFamily: GoogleFonts.poppins().fontFamily,
                     fontSize: 22,
                     color: Colors.cyanAccent,
                     fontWeight: FontWeight.bold,
@@ -57,7 +56,7 @@ class _HomepageState extends State<Homepage> {
               TextSpan(
                   text: 'LAE',
                   style: TextStyle(
-                    fontFamily: GoogleFonts.poppins().fontFamily,
+                    // fontFamily: GoogleFonts.poppins().fontFamily,
                     fontSize: 22,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -146,7 +145,7 @@ class _HomepageState extends State<Homepage> {
               Text(
                 'Popular Now  ',
                 style: TextStyle(
-                  fontFamily: GoogleFonts.poppins().fontFamily,
+                  // fontFamily: GoogleFonts.poppins().fontFamily,
                   color: const Color.fromARGB(255, 172, 170, 170),
                   fontSize: size.width * 0.035,
                 ),
@@ -157,7 +156,6 @@ class _HomepageState extends State<Homepage> {
                 child:
                     BlocBuilder<TrendingWalpaperBloc, TrendingWallpaperState>(
                   builder: (context, state) {
-                    print('Hi1');
                     if (state is TrendingWallpaperLoadingState) {
                       return Center(
                         child: CircularProgressIndicator(),
