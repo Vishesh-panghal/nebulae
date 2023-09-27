@@ -43,7 +43,7 @@ class _HomepageState extends State<Homepage> {
               fontWeight: FontWeight.bold,
               letterSpacing: 13,
             ),
-            children: [
+            children: const [
               TextSpan(
                   text: 'U',
                   style: TextStyle(
@@ -124,7 +124,6 @@ class _HomepageState extends State<Homepage> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        var query = searchController.text.toString();
                         context.read<SearchApiBloc>().add(
                               GetSearchWallpaper(
                                 query: searchController.text.toString(),
