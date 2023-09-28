@@ -5,5 +5,6 @@ sealed class SearchApiEvent {}
 
 class GetSearchWallpaper extends SearchApiEvent {
   String query;
-  GetSearchWallpaper({required this.query});
+  int pageNo;
+  GetSearchWallpaper({required this.query, this.pageNo = 1});
 }

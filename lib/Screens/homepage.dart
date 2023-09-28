@@ -20,11 +20,23 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   TextEditingController searchController = TextEditingController();
+  int mPageNo = 1;
+  late ScrollController mController;
+  int totalResult = 0;
 
   @override
   void initState() {
+
+    mController = ScrollController()..addListener(() {
+      if(mController.position.pixels == mController.position.maxScrollExtent)
+      {
+        print('End of Result');
+        mPageNo++;
+        context.read<SearchApiBloc>().add(GetSearchWallpaper(query: 'nature'));
+      }
+     });
     context.read<TrendingWalpaperBloc>().add(GetTrendingWallpaper());
-    context.read<SearchApiBloc>().add(GetSearchWallpaper(query: 'nature'));
+    
     super.initState();
   }
 
@@ -228,10 +240,10 @@ class _HomepageState extends State<Homepage> {
                           child: InkWell(
                             onTap: () {
                               context.read<SearchApiBloc>().add(
-                              GetSearchWallpaper(
-                                query: DataConstants.searchLst[index],
-                              ),
-                            );
+                                    GetSearchWallpaper(
+                                      query: DataConstants.searchLst[index],
+                                    ),
+                                  );
                             },
                             child: Text(
                               '${DataConstants.searchLst[index]}',

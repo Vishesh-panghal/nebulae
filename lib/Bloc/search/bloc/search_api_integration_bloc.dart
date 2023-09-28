@@ -16,7 +16,7 @@ class SearchApiBloc extends Bloc<SearchApiEvent, SearchApiState> {
       emit(SearchWallpaperLoadingState());
       try {
         var res = await apiHelper.getApiData(
-            url: "${Urls.searchWallpaper}?query=${event.query}&per_page=70");
+            url: "${Urls.searchWallpaper}?query=${event.query}&per_page=20&page =${event.pageNo}");
         emit(SearchWallpaperLoadedState(
             dataPhotoModal: DataModal.fromJson(res)));
       } catch (e) {
