@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nebulae/Constants/Color_constants.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:nebulae/Data/Data_modal/photo_modal.dart';
 import '../Bloc/search/bloc/search_api_integration_bloc.dart';
 import '../Bloc/trending/trending_api_integration_bloc.dart';
 import '../Constants/Data_constants.dart';
@@ -26,22 +27,26 @@ class _HomepageState extends State<Homepage> {
 
   @override
   void initState() {
+    mController = ScrollController()
+      ..addListener(() {
+        if (mController.position.pixels ==
+            mController.position.maxScrollExtent) {
+          mPageNo++;
+          print('End of Result');
+          context
+              .read<SearchApiBloc>()
+              .add(GetSearchWallpaper(query: 'nature', pageNo: mPageNo));
+        }
+      });
 
-    mController = ScrollController()..addListener(() {
-      if(mController.position.pixels == mController.position.maxScrollExtent)
-      {
-        print('End of Result');
-        mPageNo++;
-        context.read<SearchApiBloc>().add(GetSearchWallpaper(query: 'nature'));
-      }
-     });
     context.read<TrendingWalpaperBloc>().add(GetTrendingWallpaper());
-    
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<PhotoModal> arrPhotos = [];
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -138,7 +143,10 @@ class _HomepageState extends State<Homepage> {
                       onTap: () {
                         context.read<SearchApiBloc>().add(
                               GetSearchWallpaper(
-                                query: searchController.text.toString(),
+                                query: searchController.text
+                                    .toString()
+                                    .replaceAll(" ", "%20"),
+                                pageNo: mPageNo,
                               ),
                             );
                         searchController.clear();
@@ -268,6 +276,7 @@ class _HomepageState extends State<Homepage> {
                     );
                   } else if (state is SearchWallpaperLoadedState) {
                     return MasonryGridView.builder(
+                      controller: mController,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate:

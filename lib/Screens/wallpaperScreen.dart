@@ -143,7 +143,7 @@ class _WallpaperScreenPageState extends State<WallpaperScreenPage> {
                 ),
               ),
             ),
-            // -----------------------similar wallpaper----------------------------//
+            // --------------------similar wallpaper-----------------//
             Align(
               alignment: Alignment.bottomCenter,
               child: SingleChildScrollView(
