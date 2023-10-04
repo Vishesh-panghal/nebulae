@@ -244,10 +244,9 @@ class _WallpaperScreenPageState extends State<WallpaperScreenPage> {
     );
   }
 
-  void downloadWallpaper() async {
-    // GallerySaver.saveImage(widget.imgAdd)
+  void downloadWallpaper() {
     GallerySaver.saveImage(widget.imgAdd).then(
-      (value) => print("Manuel check:- $value"),
+      (value) => print("check:- $value"),
     );
   }
 }

@@ -22,23 +22,23 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   TextEditingController searchController = TextEditingController();
   int mPageNo = 1;
-  late ScrollController mController;
+  // late ScrollController mController;
   int totalResult = 0;
 
   @override
   void initState() {
-    mController = ScrollController()
-      ..addListener(() {
-        if (mController.position.pixels ==
-            mController.position.maxScrollExtent) {
-          mPageNo++;
-          print('End of Result');
-          context
+    // mController = ScrollController()
+    //   ..addListener(() {
+    //     if (mController.position.pixels ==
+    //         mController.position.maxScrollExtent) {
+    //       mPageNo++;
+    //       print('End of Result');
+          
+    //     }
+    //   });
+context
               .read<SearchApiBloc>()
               .add(GetSearchWallpaper(query: 'nature', pageNo: mPageNo));
-        }
-      });
-
     context.read<TrendingWalpaperBloc>().add(GetTrendingWallpaper());
 
     super.initState();
@@ -276,7 +276,7 @@ class _HomepageState extends State<Homepage> {
                     );
                   } else if (state is SearchWallpaperLoadedState) {
                     return MasonryGridView.builder(
-                      controller: mController,
+                      // controller: mController,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate:
